@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Reader Interest</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<style>
+:root{
+  --bg:#090909;
+  --panel:#111;
+  --card:#151515;
+  --line:#666;
+  --gold:#d7b957;
+  --gold-soft:#f0dc8f;
+  --silver:#eeeeee;
+  --muted:#bdbdbd;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:transparent;
+  color:#fff;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  padding:10px;
+}
+
+.interest-wrap{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto;
+  padding:28px;
+  background:
+    radial-gradient(circle at top,rgba(255,255,255,.06),transparent 34%),
+    linear-gradient(145deg,#080808,#111 58%,#090909);
+  border:1px solid #aaa;
+  border-radius:16px;
+  box-shadow:0 16px 40px rgba(0,0,0,.55);
+}
+
+.header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.ornament{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  color:var(--gold);
+  letter-spacing:2px;
+  font-size:14px;
+}
+
+.ornament::before,
+.ornament::after{
+  content:"";
+  width:85px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold));
+}
+
+.ornament::after{
+  background:linear-gradient(90deg,var(--gold),transparent);
+}
+
+.header h1{
+  margin:9px 0 8px;
+  font-size:34px;
+  line-height:1.15;
+}
+
+.header p{
+  max-width:720px;
+  margin:0 auto;
+  color:#d0d0d0;
+  font-size:15px;
+  line-height:1.55;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+}
+
+.card{
+  display:flex;
+  flex-direction:column;
+  padding:10px;
+  background:linear-gradient(180deg,#171717,#111);
+  border:1px solid #676767;
+  border-radius:11px;
+}
+
+.cover{
+  display:block;
+  width:100%;
+  aspect-ratio:2/3;
+  object-fit:cover;
+  border-radius:7px;
+  background:#222;
+}
+
+.title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:48px;
+  padding:10px 4px 7px;
+  text-align:center;
+  font-size:15px;
+  font-weight:800;
+}
+
+.vote-box{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:auto;
+}
+
+.vote-btn{
+  min-height:58px;
+  padding:8px 5px;
+  border:1px solid #ddd;
+  border-radius:7px;
+  background:#f2f2f2;
+  color:#111;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:900;
+  line-height:1.25;
+}
+
+.vote-btn:hover{
+  background:#0b0b0b;
+  color:#fff;
+}
+
+.vote-btn.active{
+  border-color:var(--gold);
+  background:linear-gradient(180deg,#f3df91,#caa538);
+  color:#111;
+  box-shadow:0 0 15px rgba(215,185,87,.28);
+}
+
+.vote-count{
+  display:block;
+  margin-top:4px;
+  font-size:14px;
+}
+
+.status{
+  min-height:28px;
+  margin-top:20px;
+  text-align:center;
+  color:var(--gold-soft);
+  font-size:13px;
+  font-weight:700;
+}
+
+.note{
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid #555;
+  color:#ccc;
+  text-align:center;
+  font-size:13px;
+  line-height:1.55;
+}
+
+@media(max-width:760px){
+  body{
+    padding:4px;
+  }
+
+  .interest-wrap{
+    padding:17px 10px;
+    border-radius:11px;
+  }
+
+  .header h1{
+    font-size:25px;
+  }
+
+  .header p{
+    font-size:14px;
+  }
+
+  .ornament::before,
+  .ornament::after{
+    width:45px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:11px;
+  }
+
+  .title{
+    font-size:13px;
+  }
+
+  .vote-btn{
+    font-size:11px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<section class="interest-wrap">
+
+  <div class="header">
+    <div class="ornament">★</div>
+
+    <h1>ARE YOU INTERESTED?</h1>
+
+    <p>
+      Let me know which novels you'd like to read.
+      You can vote on as many books as you like.
+    </p>
+  </div>
+
+  <div class="grid" id="bookGrid"></div>
+
+  <div class="status" id="status"></div>
+
+  <div class="note">
+    Your choices help me see which novels readers are most interested in.
+    You can change your answer at any time.
+  </div>
+
+</section>
+
+<script>
+
+const firebaseConfig={
+  apiKey:"AIzaSyC7zwIhW9g_BWXIi9K4oQBfZxm-crqGDRk",
+  authDomain:"changbin-delulu-wife-comment.firebaseapp.com",
+  projectId:"changbin-delulu-wife-comment",
+  storageBucket:"changbin-delulu-wife-comment.firebasestorage.app",
+  messagingSenderId:"640509939487",
+  appId:"1:640509939487:web:32fa85c856f2cb14902a2a"
+};
+
+if(!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+}
+
+const db=firebase.firestore();
+
+const interestRef=
+  db.collection("readerInterestPolls").doc("current");
+
+const books=[
+  {
+    id:"ticket-to-heaven",
+    title:"Ticket to Heaven",
+    image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/20260406_225918_62-copy-high.jpg?enable-io=true&width=500"
+  }
+];
+
+const storageKey="readerInterestChoices2026";
+
+let savedChoices={};
+
+try{
+  savedChoices=
+    JSON.parse(localStorage.getItem(storageKey)||"{}");
+}catch{
+  savedChoices={};
+}
+
+const grid=document.getElementById("bookGrid");
+const status=document.getElementById("status");
+
+books.forEach(book=>{
+
+  const card=document.createElement("article");
+
+  card.className="card";
+  card.dataset.book=book.id;
+
+  card.innerHTML=`
+
+    <img
+      class="cover"
+      src="${book.image}"
+      alt="${book.title}"
+    >
+
+    <div class="title">
+      ${book.title}
+    </div>
+
+    <div class="vote-box">
+
+      <button
+        class="vote-btn interested-btn"
+        type="button"
+        data-book="${book.id}"
+        data-choice="interested"
+      >
+        ❤️ Interested
+        <span
+          class="vote-count"
+          id="interested-${book.id}"
+        >
+          0
+        </span>
+      </button>
+
+      <button
+        class="vote-btn not-btn"
+        type="button"
+        data-book="${book.id}"
+        data-choice="notInterested"
+      >
+        ✖ Not for me
+        <span
+          class="vote-count"
+          id="notInterested-${book.id}"
+        >
+          0
+        </span>
+      </button>
+
+    </div>
+  `;
+
+  grid.appendChild(card);
+
+});
+
+refreshSelectedButtons();
+
+
+document.querySelectorAll(".vote-btn")
+.forEach(button=>{
+
+  button.addEventListener("click",async()=>{
+
+    const bookId=button.dataset.book;
+    const newChoice=button.dataset.choice;
+    const oldChoice=savedChoices[bookId];
+
+    if(oldChoice===newChoice){
+      status.textContent=
+        "You've already chosen this option. ❤️";
+      return;
+    }
+
+    disableBookButtons(bookId,true);
+
+    status.textContent="Saving your choice…";
+
+    try{
+
+      await db.runTransaction(async transaction=>{
+
+        const snapshot=
+          await transaction.get(interestRef);
+
+        const updates={};
+
+        updates[
+          "votes."+bookId+"."+newChoice
+        ]=
+          firebase.firestore.FieldValue.increment(1);
+
+        if(oldChoice){
+
+          updates[
+            "votes."+bookId+"."+oldChoice
+          ]=
+            firebase.firestore.FieldValue.increment(-1);
+
+        }
+
+        if(snapshot.exists){
+
+          transaction.update(
+            interestRef,
+            updates
+          );
+
+        }else{
+
+          transaction.set(
+            interestRef,
+            {
+              votes:{
+                [bookId]:{
+                  interested:
+                    newChoice==="interested" ? 1 : 0,
+
+                  notInterested:
+                    newChoice==="notInterested" ? 1 : 0
+                }
+              }
+            }
+          );
+
+        }
+
+      });
+
+      savedChoices[bookId]=newChoice;
+
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify(savedChoices)
+      );
+
+      refreshSelectedButtons();
+
+      status.textContent=
+        oldChoice
+        ? "✓ Your choice has been changed."
+        : "❤️ Thank you! Your choice has been counted.";
+
+    }catch(error){
+
+      console.error(error);
+
+      status.textContent=
+        "Your choice could not be saved. Please try again.";
+
+    }
+
+    disableBookButtons(bookId,false);
+
+  });
+
+});
+
+
+interestRef.onSnapshot(snapshot=>{
+
+  const data=
+    snapshot.exists ? snapshot.data() : {};
+
+  const votes=data.votes||{};
+
+  books.forEach(book=>{
+
+    const bookVotes=
+      votes[book.id]||{};
+
+    const interested=
+      Number(bookVotes.interested||0);
+
+    const notInterested=
+      Number(bookVotes.notInterested||0);
+
+    document.getElementById(
+      "interested-"+book.id
+    ).textContent=interested;
+
+    document.getElementById(
+      "notInterested-"+book.id
+    ).textContent=notInterested;
+
+  });
+
+},error=>{
+
+  console.error(error);
+
+  status.textContent=
+    "Live results could not be loaded.";
+
+});
+
+
+function refreshSelectedButtons(){
+
+  document.querySelectorAll(".vote-btn")
+  .forEach(button=>{
+
+    const bookId=button.dataset.book;
+    const choice=button.dataset.choice;
+
+    button.classList.toggle(
+      "active",
+      savedChoices[bookId]===choice
+    );
+
+  });
+
+}
+
+
+function disableBookButtons(bookId,disabled){
+
+  document
+    .querySelectorAll(
+      `.vote-btn[data-book="${bookId}"]`
+    )
+    .forEach(button=>{
+      button.disabled=disabled;
+    });
+
+}
+
+</script>
+
+</body>
+</html>
