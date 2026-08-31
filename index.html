@@ -11,14 +11,10 @@
 
 <style>
 :root{
-  --bg:#090909;
-  --panel:#111;
-  --card:#151515;
-  --line:#666;
   --gold:#d7b957;
   --gold-soft:#f0dc8f;
   --silver:#eeeeee;
-  --muted:#bdbdbd;
+  --card:#151515;
 }
 
 *{
@@ -39,20 +35,35 @@ body{
 
 .interest-wrap{
   width:100%;
-  max-width:1000px;
+  max-width:1100px;
   margin:0 auto;
   padding:28px;
+  overflow:hidden;
+
   background:
-    radial-gradient(circle at top,rgba(255,255,255,.06),transparent 34%),
-    linear-gradient(145deg,#080808,#111 58%,#090909);
+    radial-gradient(
+      circle at top,
+      rgba(255,255,255,.06),
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      #080808,
+      #111 58%,
+      #090909
+    );
+
   border:1px solid #aaa;
   border-radius:16px;
   box-shadow:0 16px 40px rgba(0,0,0,.55);
 }
 
+
+/* HEADER */
+
 .header{
   text-align:center;
-  margin-bottom:25px;
+  margin-bottom:26px;
 }
 
 .ornament{
@@ -60,6 +71,7 @@ body{
   align-items:center;
   justify-content:center;
   gap:10px;
+
   color:var(--gold);
   letter-spacing:2px;
   font-size:14px;
@@ -70,120 +82,250 @@ body{
   content:"";
   width:85px;
   height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold));
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      var(--gold)
+    );
 }
 
 .ornament::after{
-  background:linear-gradient(90deg,var(--gold),transparent);
+  background:
+    linear-gradient(
+      90deg,
+      var(--gold),
+      transparent
+    );
 }
 
 .header h1{
   margin:9px 0 8px;
+
   font-size:34px;
   line-height:1.15;
 }
 
 .header p{
-  max-width:720px;
+  max-width:760px;
   margin:0 auto;
+
   color:#d0d0d0;
   font-size:15px;
   line-height:1.55;
 }
 
+
+/* GRID */
+
 .grid{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+
+  grid-template-columns:
+    repeat(4,minmax(0,1fr));
+
   gap:16px;
 }
+
+
+/* BOOK CARD */
 
 .card{
   display:flex;
   flex-direction:column;
+  min-width:0;
+
   padding:10px;
-  background:linear-gradient(180deg,#171717,#111);
+
+  background:
+    linear-gradient(
+      180deg,
+      #171717,
+      #111
+    );
+
   border:1px solid #676767;
   border-radius:11px;
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+
+  border-color:#e7e7e7;
+
+  box-shadow:
+    0 10px 24px
+    rgba(255,255,255,.08);
 }
 
 .cover{
   display:block;
+
   width:100%;
-  aspect-ratio:2/3;
+  aspect-ratio:2 / 3;
+
   object-fit:cover;
+
+  border:2px solid #fff;
   border-radius:7px;
+
   background:#222;
 }
 
-.title{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:48px;
-  padding:10px 4px 7px;
-  text-align:center;
-  font-size:15px;
-  font-weight:800;
-}
+
+/* BUTTON AREA */
 
 .vote-box{
   display:grid;
-  grid-template-columns:1fr 1fr;
+
+  grid-template-columns:
+    1fr 1fr;
+
   gap:7px;
-  margin-top:auto;
+
+  margin-top:10px;
 }
 
 .vote-btn{
-  min-height:58px;
-  padding:8px 5px;
+  width:100%;
+  min-width:0;
+  min-height:60px;
+
+  padding:8px 4px;
+
   border:1px solid #ddd;
   border-radius:7px;
+
   background:#f2f2f2;
   color:#111;
+
   cursor:pointer;
+
+  font-family:inherit;
   font-size:12px;
   font-weight:900;
-  line-height:1.25;
+  line-height:1.2;
+
+  transition:
+    transform .15s ease,
+    background .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
 }
 
-.vote-btn:hover{
+.vote-btn:hover:not(:disabled){
+  transform:translateY(-1px);
+
   background:#0b0b0b;
   color:#fff;
 }
 
-.vote-btn.active{
-  border-color:var(--gold);
-  background:linear-gradient(180deg,#f3df91,#caa538);
+.vote-btn:disabled{
+  cursor:wait;
+  opacity:.7;
+}
+
+.vote-btn.active-interested{
   color:#111;
-  box-shadow:0 0 15px rgba(215,185,87,.28);
+
+  border-color:var(--gold);
+
+  background:
+    linear-gradient(
+      180deg,
+      #f5e39b,
+      #cba63b
+    );
+
+  box-shadow:
+    0 0 15px
+    rgba(215,185,87,.30);
+}
+
+.vote-btn.active-not{
+  color:#fff;
+
+  border-color:#bbb;
+
+  background:
+    linear-gradient(
+      180deg,
+      #555,
+      #282828
+    );
+
+  box-shadow:
+    0 0 12px
+    rgba(255,255,255,.12);
 }
 
 .vote-count{
   display:block;
-  margin-top:4px;
-  font-size:14px;
+
+  margin-top:5px;
+
+  font-size:15px;
 }
+
+
+/* MESSAGE */
 
 .status{
-  min-height:28px;
-  margin-top:20px;
+  min-height:34px;
+
+  margin-top:22px;
+
   text-align:center;
+
   color:var(--gold-soft);
+
   font-size:13px;
-  font-weight:700;
+  font-weight:800;
 }
 
+
+/* FOOT NOTE */
+
 .note{
-  margin-top:16px;
-  padding-top:16px;
+  margin-top:10px;
+  padding-top:17px;
+
   border-top:1px solid #555;
+
   color:#ccc;
+
   text-align:center;
+
   font-size:13px;
   line-height:1.55;
 }
 
-@media(max-width:760px){
+
+/* TABLET */
+
+@media(max-width:850px){
+
+  .grid{
+    grid-template-columns:
+      repeat(3,minmax(0,1fr));
+
+    gap:12px;
+  }
+
+}
+
+
+/* PHONE */
+
+@media(max-width:600px){
+
   body{
     padding:4px;
   }
@@ -207,315 +349,858 @@ body{
   }
 
   .grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:11px;
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+
+    gap:10px;
   }
 
-  .title{
-    font-size:13px;
+  .card{
+    padding:7px;
+  }
+
+  .cover{
+    border-width:2px;
+  }
+
+  .vote-box{
+    gap:5px;
+    margin-top:7px;
   }
 
   .vote-btn{
-    font-size:11px;
+    min-height:57px;
+    padding:7px 2px;
+
+    font-size:10px;
   }
+
+  .vote-count{
+    font-size:14px;
+  }
+
 }
+
 </style>
 </head>
+
 
 <body>
 
 <section class="interest-wrap">
 
   <div class="header">
-    <div class="ornament">★</div>
 
-    <h1>ARE YOU INTERESTED?</h1>
+    <div class="ornament">
+      ★
+    </div>
+
+    <h1>
+      ARE YOU INTERESTED?
+    </h1>
 
     <p>
       Let me know which novels you'd like to read.
-      You can vote on as many books as you like.
+      Vote on as many books as you like —
+      every choice helps me decide what readers
+      are most interested in.
     </p>
+
   </div>
 
-  <div class="grid" id="bookGrid"></div>
 
-  <div class="status" id="status"></div>
+  <div
+    class="grid"
+    id="bookGrid">
+  </div>
+
+
+  <div
+    class="status"
+    id="status">
+  </div>
+
 
   <div class="note">
-    Your choices help me see which novels readers are most interested in.
+
+    ❤️ Choose <strong>Interested</strong>
+    for books you'd like me to translate.
+
+    <br>
+
+    ✖ Choose <strong>Not for me</strong>
+    if you're not interested.
+
+    <br><br>
+
     You can change your answer at any time.
+
   </div>
 
 </section>
 
+
 <script>
 
+/* =============================
+   FIREBASE
+============================= */
+
 const firebaseConfig={
-  apiKey:"AIzaSyC7zwIhW9g_BWXIi9K4oQBfZxm-crqGDRk",
-  authDomain:"changbin-delulu-wife-comment.firebaseapp.com",
-  projectId:"changbin-delulu-wife-comment",
-  storageBucket:"changbin-delulu-wife-comment.firebasestorage.app",
-  messagingSenderId:"640509939487",
-  appId:"1:640509939487:web:32fa85c856f2cb14902a2a"
+
+  apiKey:
+  "AIzaSyC7zwIhW9g_BWXIi9K4oQBfZxm-crqGDRk",
+
+  authDomain:
+  "changbin-delulu-wife-comment.firebaseapp.com",
+
+  projectId:
+  "changbin-delulu-wife-comment",
+
+  storageBucket:
+  "changbin-delulu-wife-comment.firebasestorage.app",
+
+  messagingSenderId:
+  "640509939487",
+
+  appId:
+  "1:640509939487:web:32fa85c856f2cb14902a2a"
+
 };
 
+
 if(!firebase.apps.length){
-  firebase.initializeApp(firebaseConfig);
+
+  firebase.initializeApp(
+    firebaseConfig
+  );
+
 }
 
-const db=firebase.firestore();
+
+const db=
+  firebase.firestore();
+
+
+/*
+  NEW LIVE DOCUMENT.
+
+  This keeps the finished poll
+  and our earlier test separate.
+*/
 
 const interestRef=
-  db.collection("readerInterestPolls").doc("current");
+  db
+  .collection("readerInterestPolls")
+  .doc("livePoll2026");
+
+
+
+/* =============================
+   BOOKS
+============================= */
 
 const books=[
-  {
-    id:"ticket-to-heaven",
-    title:"Ticket to Heaven",
-    image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/20260406_225918_62-copy-high.jpg?enable-io=true&width=500"
-  }
+
+{
+  id:"book-01",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/lost-in-the-woods-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-02",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-9-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-03",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-36-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-04",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-30-high-1ts2hl.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-05",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-15-high-iff0tr.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-06",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-34-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-07",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-13-high-bjbgzc.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-08",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-18-high-j5jem8.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-09",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-16-high-lfaf0w.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-10",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-20-high-21a4yu.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-11",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-1-high-shjw26.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-12",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-3-high-567gzw.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-13",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/bed-friend-high-0nb7t3.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-14",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-11-high-ij4lqs.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-15",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-3-high-9xsmm0.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-16",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-7-high-covs6s.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-17",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-6-high-5bmzq3.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-18",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-2-high-r79aa0.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-19",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-3-high-zio1c0.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-20",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-1-high-vkd221.jpg?enable-io=true&width=500"
+},
+
+
+/*
+  Peach Lover removed here.
+*/
+
+
+{
+  id:"book-21",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/20260406_225918_62-copy-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-22",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/20260130_185619_56-high.jpg?enable-io=true&width=500"
+},
+
+
+/*
+  You(r)Tuber removed here.
+*/
+
+
+{
+  id:"book-23",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-10-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-24",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-9-high-14o6kx.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-25",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-8-high-hshee4.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-26",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-45-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-27",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-47-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-28",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-46-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-29",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-49-high.jpg?enable-io=true&width=500"
+},
+
+{
+  id:"book-30",
+  image:"https://primary.jwwb.nl/public/k/n/u/temp-simwqjgegxcullpwoqtl/book_detail_large-48-high.jpg?enable-io=true&width=500"
+}
+
 ];
 
-const storageKey="readerInterestChoices2026";
+
+
+/* =============================
+   SAVED READER CHOICES
+============================= */
+
+const storageKey=
+  "readerInterestChoicesLive2026";
+
 
 let savedChoices={};
 
+
 try{
+
   savedChoices=
-    JSON.parse(localStorage.getItem(storageKey)||"{}");
+    JSON.parse(
+      localStorage.getItem(
+        storageKey
+      ) || "{}"
+    );
+
 }catch{
+
   savedChoices={};
+
 }
 
-const grid=document.getElementById("bookGrid");
-const status=document.getElementById("status");
+
+
+const grid=
+  document.getElementById(
+    "bookGrid"
+  );
+
+
+const status=
+  document.getElementById(
+    "status"
+  );
+
+
+
+/* =============================
+   BUILD BOOK CARDS
+============================= */
 
 books.forEach(book=>{
 
-  const card=document.createElement("article");
+  const card=
+    document.createElement(
+      "article"
+    );
+
 
   card.className="card";
-  card.dataset.book=book.id;
+
 
   card.innerHTML=`
 
     <img
       class="cover"
       src="${book.image}"
-      alt="${book.title}"
+      alt="Novel cover"
+      loading="lazy"
     >
 
-    <div class="title">
-      ${book.title}
-    </div>
 
     <div class="vote-box">
 
+
       <button
-        class="vote-btn interested-btn"
+        class="vote-btn"
         type="button"
         data-book="${book.id}"
         data-choice="interested"
       >
+
         ❤️ Interested
+
         <span
           class="vote-count"
           id="interested-${book.id}"
         >
           0
         </span>
+
       </button>
 
+
       <button
-        class="vote-btn not-btn"
+        class="vote-btn"
         type="button"
         data-book="${book.id}"
         data-choice="notInterested"
       >
+
         ✖ Not for me
+
         <span
           class="vote-count"
           id="notInterested-${book.id}"
         >
           0
         </span>
+
       </button>
 
+
     </div>
+
   `;
 
-  grid.appendChild(card);
+
+  grid.appendChild(
+    card
+  );
 
 });
+
 
 refreshSelectedButtons();
 
 
-document.querySelectorAll(".vote-btn")
+
+/* =============================
+   VOTING
+============================= */
+
+document
+.querySelectorAll(".vote-btn")
 .forEach(button=>{
 
-  button.addEventListener("click",async()=>{
 
-    const bookId=button.dataset.book;
-    const newChoice=button.dataset.choice;
-    const oldChoice=savedChoices[bookId];
+  button.addEventListener(
+    "click",
+    async()=>{
 
-    if(oldChoice===newChoice){
-      status.textContent=
-        "You've already chosen this option. ❤️";
-      return;
-    }
 
-    disableBookButtons(bookId,true);
+      const bookId=
+        button.dataset.book;
 
-    status.textContent="Saving your choice…";
 
-    try{
+      const newChoice=
+        button.dataset.choice;
 
-      await db.runTransaction(async transaction=>{
 
-        const snapshot=
-          await transaction.get(interestRef);
+      const oldChoice=
+        savedChoices[bookId];
 
-        const updates={};
 
-        updates[
-          "votes."+bookId+"."+newChoice
-        ]=
-          firebase.firestore.FieldValue.increment(1);
+      if(
+        oldChoice===newChoice
+      ){
 
-        if(oldChoice){
+        status.textContent=
+          "You've already chosen this option. ❤️";
 
-          updates[
-            "votes."+bookId+"."+oldChoice
-          ]=
-            firebase.firestore.FieldValue.increment(-1);
+        return;
 
-        }
+      }
 
-        if(snapshot.exists){
 
-          transaction.update(
-            interestRef,
-            updates
-          );
-
-        }else{
-
-          transaction.set(
-            interestRef,
-            {
-              votes:{
-                [bookId]:{
-                  interested:
-                    newChoice==="interested" ? 1 : 0,
-
-                  notInterested:
-                    newChoice==="notInterested" ? 1 : 0
-                }
-              }
-            }
-          );
-
-        }
-
-      });
-
-      savedChoices[bookId]=newChoice;
-
-      localStorage.setItem(
-        storageKey,
-        JSON.stringify(savedChoices)
+      disableBookButtons(
+        bookId,
+        true
       );
 
-      refreshSelectedButtons();
 
       status.textContent=
-        oldChoice
-        ? "✓ Your choice has been changed."
-        : "❤️ Thank you! Your choice has been counted.";
+        "Saving your choice…";
 
-    }catch(error){
 
-      console.error(error);
+      try{
 
-      status.textContent=
-        "Your choice could not be saved. Please try again.";
+
+        await db.runTransaction(
+          async transaction=>{
+
+
+            const snapshot=
+              await transaction.get(
+                interestRef
+              );
+
+
+            const data=
+              snapshot.exists
+              ? snapshot.data()
+              : {};
+
+
+            const votes=
+              data.votes || {};
+
+
+            const current=
+              votes[bookId] || {};
+
+
+            let interested=
+              Number(
+                current.interested || 0
+              );
+
+
+            let notInterested=
+              Number(
+                current.notInterested || 0
+              );
+
+
+            /*
+              Remove the reader's
+              previous choice.
+            */
+
+            if(
+              oldChoice==="interested"
+            ){
+
+              interested=
+                Math.max(
+                  0,
+                  interested-1
+                );
+
+            }
+
+
+            if(
+              oldChoice==="notInterested"
+            ){
+
+              notInterested=
+                Math.max(
+                  0,
+                  notInterested-1
+                );
+
+            }
+
+
+            /*
+              Add their new choice.
+            */
+
+            if(
+              newChoice==="interested"
+            ){
+
+              interested++;
+
+            }
+
+
+            if(
+              newChoice==="notInterested"
+            ){
+
+              notInterested++;
+
+            }
+
+
+            const updates={};
+
+
+            updates[
+              "votes."+bookId
+            ]={
+
+              interested:
+                interested,
+
+              notInterested:
+                notInterested
+
+            };
+
+
+            if(snapshot.exists){
+
+              transaction.update(
+                interestRef,
+                updates
+              );
+
+            }else{
+
+              transaction.set(
+                interestRef,
+                {
+                  votes:{
+                    [bookId]:{
+                      interested:
+                        interested,
+
+                      notInterested:
+                        notInterested
+                    }
+                  }
+                }
+              );
+
+            }
+
+
+          }
+        );
+
+
+        savedChoices[
+          bookId
+        ]=
+          newChoice;
+
+
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify(
+            savedChoices
+          )
+        );
+
+
+        refreshSelectedButtons();
+
+
+        status.textContent=
+          oldChoice
+
+          ? "✓ Your choice has been changed."
+
+          : "❤️ Thank you! Your choice has been counted.";
+
+
+      }catch(error){
+
+
+        console.error(
+          error
+        );
+
+
+        status.textContent=
+          "Your choice could not be saved. Please try again.";
+
+
+      }
+
+
+      disableBookButtons(
+        bookId,
+        false
+      );
+
 
     }
+  );
 
-    disableBookButtons(bookId,false);
-
-  });
 
 });
 
 
-interestRef.onSnapshot(snapshot=>{
+
+/* =============================
+   LIVE RESULTS
+============================= */
+
+interestRef.onSnapshot(
+
+snapshot=>{
+
 
   const data=
-    snapshot.exists ? snapshot.data() : {};
+    snapshot.exists
+    ? snapshot.data()
+    : {};
 
-  const votes=data.votes||{};
+
+  const votes=
+    data.votes || {};
+
 
   books.forEach(book=>{
 
+
     const bookVotes=
-      votes[book.id]||{};
+      votes[book.id] || {};
+
 
     const interested=
-      Number(bookVotes.interested||0);
+      Math.max(
+        0,
+        Number(
+          bookVotes.interested || 0
+        )
+      );
+
 
     const notInterested=
-      Number(bookVotes.notInterested||0);
+      Math.max(
+        0,
+        Number(
+          bookVotes.notInterested || 0
+        )
+      );
 
-    document.getElementById(
+
+    document
+    .getElementById(
       "interested-"+book.id
-    ).textContent=interested;
+    )
+    .textContent=
+      interested;
 
-    document.getElementById(
+
+    document
+    .getElementById(
       "notInterested-"+book.id
-    ).textContent=notInterested;
+    )
+    .textContent=
+      notInterested;
+
 
   });
 
-},error=>{
 
-  console.error(error);
+},
+
+error=>{
+
+
+  console.error(
+    error
+  );
+
 
   status.textContent=
     "Live results could not be loaded.";
 
-});
 
+}
+
+);
+
+
+
+/* =============================
+   SELECTED BUTTON STYLE
+============================= */
 
 function refreshSelectedButtons(){
 
-  document.querySelectorAll(".vote-btn")
+
+  document
+  .querySelectorAll(".vote-btn")
   .forEach(button=>{
 
-    const bookId=button.dataset.book;
-    const choice=button.dataset.choice;
 
-    button.classList.toggle(
-      "active",
-      savedChoices[bookId]===choice
+    const bookId=
+      button.dataset.book;
+
+
+    const choice=
+      button.dataset.choice;
+
+
+    button.classList.remove(
+      "active-interested",
+      "active-not"
     );
 
+
+    if(
+      savedChoices[bookId]
+      !== choice
+    ){
+
+      return;
+
+    }
+
+
+    if(
+      choice==="interested"
+    ){
+
+      button.classList.add(
+        "active-interested"
+      );
+
+    }
+
+
+    if(
+      choice==="notInterested"
+    ){
+
+      button.classList.add(
+        "active-not"
+      );
+
+    }
+
+
   });
+
 
 }
 
 
-function disableBookButtons(bookId,disabled){
+
+/* =============================
+   DISABLE ONE BOOK WHILE SAVING
+============================= */
+
+function disableBookButtons(
+  bookId,
+  disabled
+){
+
 
   document
-    .querySelectorAll(
-      `.vote-btn[data-book="${bookId}"]`
-    )
-    .forEach(button=>{
-      button.disabled=disabled;
-    });
+  .querySelectorAll(
+    `.vote-btn[data-book="${bookId}"]`
+  )
+  .forEach(button=>{
+
+    button.disabled=
+      disabled;
+
+  });
+
 
 }
 
