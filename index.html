@@ -1208,3 +1208,34 @@ function disableBookButtons(
 
 </body>
 </html>
+/* =============================
+   AUTO RESIZE FOR WEBADOR
+============================= */
+
+function sendHeightToParent(){
+
+  const height =
+    document.documentElement.scrollHeight;
+
+  window.parent.postMessage(
+    {
+      type:"readerInterestHeight",
+      height:height
+    },
+    "*"
+  );
+
+}
+
+window.addEventListener(
+  "load",
+  sendHeightToParent
+);
+
+window.addEventListener(
+  "resize",
+  sendHeightToParent
+);
+
+setTimeout(sendHeightToParent,300);
+setTimeout(sendHeightToParent,1000);
